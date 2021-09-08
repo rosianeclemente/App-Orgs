@@ -20,6 +20,7 @@ class ListaProdutosActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
+        //commit teste
     }
 
     override fun onResume() {
