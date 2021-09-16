@@ -10,6 +10,7 @@ import com.example.apporgs.R
 import com.example.apporgs.dao.ProdutosDao
 import com.example.apporgs.databinding.ActivityFormularioProdutoBinding
 import com.example.apporgs.databinding.FormularioImagemBinding
+import com.example.apporgs.extensions.tentaCarregarImagem
 import com.example.apporgs.model.Produto
 
 import java.math.BigDecimal
@@ -31,7 +32,8 @@ class FormularioProdutoActivity : AppCompatActivity() {
            val bindinfFormularioImagem = FormularioImagemBinding.inflate(layoutInflater)
             bindinfFormularioImagem.botaoCarregar.setOnClickListener {
                 val url = bindinfFormularioImagem.formularioImagemUrl.text.toString()
-                bindinfFormularioImagem.imageDialog.load(url)
+                bindinfFormularioImagem.imageDialog.tentaCarregarImagem(url)
+
             }
            AlertDialog.Builder(this)
 
@@ -58,6 +60,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         }
     }
 
+
     private fun criaProduto(): Produto {
         val campoNome = binding.activityFormularioProdutoNome
         val nome = campoNome.text.toString()
@@ -70,6 +73,8 @@ class FormularioProdutoActivity : AppCompatActivity() {
         } else {
             BigDecimal(valorEmTexto)
         }
+
+
 
         return Produto(
             nome = nome,

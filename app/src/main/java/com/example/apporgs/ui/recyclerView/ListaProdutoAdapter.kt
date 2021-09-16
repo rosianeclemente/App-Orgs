@@ -4,9 +4,12 @@ import com.example.apporgs.databinding.ProdutoItemBinding
 import com.example.apporgs.model.Produto
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.apporgs.R
+import com.example.apporgs.extensions.tentaCarregarImagem
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -30,7 +33,17 @@ class ListaProdutosAdapter(
             val valor = binding.produtoItemValor
             val valorEmMoeda: String = formataMoeda(produto.valor)
             valor.text = valorEmMoeda
-            binding.imageView.load(produto.imagem)
+
+
+//           val visibilidade = if(produto.imagem != null){
+//                View.VISIBLE
+//            }else{
+//                View.GONE
+//            }
+//            binding.imageView.visibility = visibilidade
+
+            //outra forma de implementação
+            binding.imageView.tentaCarregarImagem(produto.imagem)
 
 
         }
