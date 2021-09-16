@@ -3,6 +3,8 @@ package com.example.apporgs.ui.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
+import androidx.appcompat.app.AlertDialog
+import com.example.apporgs.R
 import com.example.apporgs.dao.ProdutosDao
 import com.example.apporgs.databinding.ActivityListaProdutosActivityBinding
 import com.example.apporgs.ui.recyclerView.ListaProdutosAdapter
@@ -20,7 +22,7 @@ class ListaProdutosActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-        //commit teste
+
     }
 
     override fun onResume() {

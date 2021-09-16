@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AppOrgs</string>
+    <string name="carregar">Carregar</string>
 </resources>
