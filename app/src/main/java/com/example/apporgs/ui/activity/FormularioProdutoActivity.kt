@@ -4,14 +4,15 @@ package com.example.apporgs.ui.activity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import coil.imageLoader
+
 import coil.load
-import com.example.apporgs.R
+
 import com.example.apporgs.dao.ProdutosDao
 import com.example.apporgs.databinding.ActivityFormularioProdutoBinding
 import com.example.apporgs.databinding.FormularioImagemBinding
 import com.example.apporgs.extensions.tentaCarregarImagem
 import com.example.apporgs.model.Produto
+import com.example.apporgs.ui.dialog.FormularioImagemDialog
 
 import java.math.BigDecimal
 
@@ -26,25 +27,16 @@ class FormularioProdutoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraBotaoSalvar()
+        title = "Cadastrar Produto"
 
 
         binding.imageView2.setOnClickListener {
-           val bindinfFormularioImagem = FormularioImagemBinding.inflate(layoutInflater)
-            bindinfFormularioImagem.botaoCarregar.setOnClickListener {
-                val url = bindinfFormularioImagem.formularioImagemUrl.text.toString()
-                bindinfFormularioImagem.imageDialog.tentaCarregarImagem(url)
+          FormularioImagemDialog(this).mostra{imagem ->
+                url = imagem
+                binding.imageView2.tentaCarregarImagem(url)
 
-            }
-           AlertDialog.Builder(this)
+          }
 
-               .setView(bindinfFormularioImagem.root)
-               .setPositiveButton("confirmar") {_,_ ->
-                   url = bindinfFormularioImagem.formularioImagemUrl.text.toString()
-                   binding.imageView2.load(url)
-               }
-               .setNegativeButton("cancelar"){_, _ ->
-               }
-               .show()
         }
 
 
