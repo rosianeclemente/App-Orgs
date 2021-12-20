@@ -28,12 +28,12 @@ class FormularioProdutoActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraBotaoSalvar()
         title = "Cadastrar Produto"
+        configuraBotaoSalvar()
 
-
-        binding.imageView2.setOnClickListener {
+        binding.activityFormularioProdutoImagem.setOnClickListener {
           FormularioImagemDialog(this).mostra{imagem ->
                 url = imagem
-                binding.imageView2.tentaCarregarImagem(url)
+                binding.activityFormularioProdutoImagem.tentaCarregarImagem(url)
 
           }
 
@@ -59,26 +59,25 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val campoDescricao = binding.activityFormularioProdutoDescricao
         val descricao = campoDescricao.text.toString()
         val campoValor = binding.activityFormularioProdutoValor
-        val valorEmTexto = campoValor.text.toString()
+        val valorEmTexto = campoValor.toString()
         val valor = if (valorEmTexto.isBlank()) {
             BigDecimal.ZERO
         } else {
             BigDecimal(valorEmTexto)
         }
 
-
-
         return Produto(
             nome = nome,
             descricao = descricao,
             valor = valor,
-            imagem = url,
-
+            imagem = url
         )
+    }
+
     }
 
 
 
 
-}
+
 

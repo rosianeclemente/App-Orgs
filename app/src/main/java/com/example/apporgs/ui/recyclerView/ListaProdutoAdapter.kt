@@ -17,14 +17,24 @@ import java.util.*
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto>
+    produtos: List<Produto>,
+    var quandoClicaNoItem: (produto: Produto) -> Unit = {}
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val produtos = produtos.toMutableList()
 
-    class ViewHolder(private val binding: ProdutoItemBinding) :
+    inner class ViewHolder(private val binding: ProdutoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private lateinit var  produto: Produto
+
+        init {
+            itemView.setOnClickListener {
+                if(::produto.isInitialized){
+                    quandoClicaNoItem(produto)
+                }
+            }
+        }
         fun vincula(produto: Produto) {
             val nome = binding.produtoItemNome
             nome.text = produto.nome
