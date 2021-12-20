@@ -5,7 +5,7 @@ import coil.load
 import com.example.apporgs.R
 
 fun ImageView.tentaCarregarImagem(url: String? = null,
-fallback: Int = R.drawable.imagem_padrao) {
+fallback: Int = R.drawable.imagem_padrao1) {
     load(url){
         fallback(fallback) // caso nao tenha imagem
         error(R.drawable.ic_baseline_priority_high_24)
