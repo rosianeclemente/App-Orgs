@@ -15,4 +15,8 @@
 
         <item name="android:fontFamily">@font/montserrat</item>
     </style>
+    <style name="Theme.Orgs.NoActionBar" parent="Theme.AppOrgs">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>
