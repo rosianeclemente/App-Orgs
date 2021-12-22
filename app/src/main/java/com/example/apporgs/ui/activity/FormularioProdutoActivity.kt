@@ -2,14 +2,11 @@ package com.example.apporgs.ui.activity
 
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-
-import coil.load
-
+import androidx.room.Room
 import com.example.apporgs.dao.ProdutosDao
+import com.example.apporgs.database.AppDatabase
 import com.example.apporgs.databinding.ActivityFormularioProdutoBinding
-import com.example.apporgs.databinding.FormularioImagemBinding
 import com.example.apporgs.extensions.tentaCarregarImagem
 import com.example.apporgs.model.Produto
 import com.example.apporgs.ui.dialog.FormularioImagemDialog
@@ -44,10 +41,12 @@ class FormularioProdutoActivity : AppCompatActivity() {
 
     private fun configuraBotaoSalvar() {
         val botaoSalvar = binding.activityFormularioProdutoBotaoSalvar
-        val dao = ProdutosDao()
+        val db = AppDatabase.getInstance(this)
+        val produtoDao = db.produtoDao()
+
         botaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            dao.adiciona(produtoNovo)
+            produtoDao.insert(produtoNovo)
             finish()
         }
     }
