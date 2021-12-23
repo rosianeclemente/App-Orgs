@@ -6,12 +6,12 @@ import com.example.apporgs.model.Produto
 @Dao
 interface ProdutoDao {
 
-    abstract val getId: Unit
+
 
     @Query("SELECT * FROM Produto")
     fun getAll(): List<Produto>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(produto: Produto)
 
     @Delete

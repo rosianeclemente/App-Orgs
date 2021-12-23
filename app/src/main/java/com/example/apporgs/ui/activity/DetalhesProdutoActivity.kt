@@ -17,7 +17,7 @@ import com.example.apporgs.model.Produto
 class DetalhesProdutoActivity : AppCompatActivity() {
 
     private var produto: Produto? = null
-    private var produtoId: Long? = null
+    private var produtoId: Long = 0L
     private val binding by lazy { ActivityDetalhesProdutosBinding.inflate(layoutInflater) }
     private val produtoDao by lazy { AppDatabase.getInstance(this).produtoDao() }
 
@@ -30,10 +30,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        produtoId?.let { id ->
-            produto = produtoDao.getId(id)
-
-        }
+        produto = produtoDao.getId(produtoId)
         produto?.let {
             preencheCampos(it)
         } ?: finish()
@@ -53,7 +50,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
             }
             R.id.menu_detalhes_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {
-                    putExtra(CHAVE_PRODUTO, produto)
+                    putExtra(CHAVE_PRODUTO_ID, produtoId)
                     startActivity(this)
                 }
             }
@@ -63,10 +60,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     private fun tentaCarregarProduto() {
-        intent.getLongExtra())?.let { produtoCarregado ->
-
-            produtoId = produtoCarregado.id
-        } ?: finish()
+        produtoId = intent.getLongExtra(CHAVE_PRODUTO_ID, 0L)
     }
 
     private fun preencheCampos(produtoCarregado: Produto) {
