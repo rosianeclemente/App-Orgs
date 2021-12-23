@@ -3,8 +3,7 @@ package com.example.apporgs.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
-import com.example.apporgs.dao.ProdutosDao
+
 import com.example.apporgs.database.AppDatabase
 import com.example.apporgs.databinding.ActivityFormularioProdutoBinding
 import com.example.apporgs.extensions.tentaCarregarImagem
@@ -19,6 +18,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
     }
     private  var url: String? = null
+    private var idProduto = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,17 +35,27 @@ class FormularioProdutoActivity : AppCompatActivity() {
           }
 
         }
-
+        intent.getParcelableExtra<Produto>(CHAVE_PRODUTO)?.let{ produtoCarregado ->
+            title = "Alterar Produto"
+            idProduto = produtoCarregado.id
+            url = produtoCarregado.imagem
+            binding.activityFormularioProdutoImagem.tentaCarregarImagem(produtoCarregado.imagem)
+            binding.activityFormularioProdutoNome.setText(produtoCarregado.nome)
+            binding.activityFormularioProdutoDescricao.setText(produtoCarregado.descricao)
+            binding.activityFormularioProdutoValor.setText(produtoCarregado.valor.toPlainString())
+        }
 
     }
 
     private fun configuraBotaoSalvar() {
-        val botaoSalvar = binding.activityFormularioProdutoBotaoSalvar
         val db = AppDatabase.getInstance(this)
-        val produtoDao = db.produtoDao()
 
-        botaoSalvar.setOnClickListener {
+        val produtoDao = db.produtoDao()
+        binding.activityFormularioProdutoBotaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
+            if(idProduto >0){
+                produtoDao.update(produtoNovo)
+            }
             produtoDao.insert(produtoNovo)
             finish()
         }
@@ -66,6 +76,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         }
 
         return Produto(
+            id = idProduto,
             nome = nome,
             descricao = descricao,
             valor = valor,

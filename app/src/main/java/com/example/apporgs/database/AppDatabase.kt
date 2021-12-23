@@ -9,7 +9,7 @@ import com.example.apporgs.database.converters.Converters
 import com.example.apporgs.database.dao.ProdutoDao
 import com.example.apporgs.model.Produto
 
-@Database(entities = [Produto::class], version = 1)
+@Database(entities = [Produto::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun produtoDao(): ProdutoDao
@@ -19,7 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                "orgs.db"
+                "AppOrgs_db"
             ).allowMainThreadQueries()
                 .build()
         }

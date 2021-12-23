@@ -5,16 +5,17 @@ import android.os.Bundle
 import android.content.Intent
 import androidx.room.Room
 import com.example.apporgs.database.AppDatabase
+import com.example.apporgs.database.dao.ProdutoDao
 
 import com.example.apporgs.databinding.ActivityListaProdutosActivityBinding
-import com.example.apporgs.model.Produto
+
 import com.example.apporgs.ui.recyclerView.ListaProdutosAdapter
 import java.math.BigDecimal
 
 class ListaProdutosActivity : AppCompatActivity() {
 
-    private val dao = com.example.apporgs.dao.ProdutosDao()
-    private val adapter = ListaProdutosAdapter(context = this, produtos = dao.buscaTodos())
+
+    private val adapter = ListaProdutosAdapter(context = this)
     private val binding by lazy {
         ActivityListaProdutosActivityBinding.inflate(layoutInflater)
     }
@@ -25,22 +26,11 @@ class ListaProdutosActivity : AppCompatActivity() {
         configuraRecyclerView()
         configuraFab()
 
-        val db = Room.databaseBuilder(
-            this, AppDatabase::class.java, "appOrgs.db"
-        ).allowMainThreadQueries()
-            .build()
-        val produtoDao = db.produtoDao()
-        adapter.atualiza(produtoDao.getAll())
-
     }
 
     override fun onResume() {
         super.onResume()
-        adapter.atualiza(dao.buscaTodos())
-        val db = Room.databaseBuilder(
-            this, AppDatabase::class.java, "appOrgs.db"
-        ).allowMainThreadQueries()
-            .build()
+        val db = AppDatabase.getInstance(this)
         val produtoDao = db.produtoDao()
         adapter.atualiza(produtoDao.getAll())
     }
