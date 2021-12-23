@@ -6,6 +6,8 @@ import com.example.apporgs.model.Produto
 @Dao
 interface ProdutoDao {
 
+    abstract val getId: Unit
+
     @Query("SELECT * FROM Produto")
     fun getAll(): List<Produto>
 
@@ -17,4 +19,7 @@ interface ProdutoDao {
 
     @Update
     fun update(produto: Produto)
+
+    @Query("SELECT * FROM Produto WHERE id = :id")
+    fun getId(id: Long) : Produto?
 }

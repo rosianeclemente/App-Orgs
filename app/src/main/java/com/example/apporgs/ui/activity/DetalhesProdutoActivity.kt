@@ -14,16 +14,29 @@ import com.example.apporgs.extensions.tentaCarregarImagem
 import com.example.apporgs.model.Produto
 
 
-class DetalhesProdutoActivity : AppCompatActivity(){
-    private lateinit var produto: Produto
-    private val binding by lazy {
-        ActivityDetalhesProdutosBinding.inflate(layoutInflater)
-    }
+class DetalhesProdutoActivity : AppCompatActivity() {
+
+    private var produto: Produto? = null
+    private var produtoId: Long? = null
+    private val binding by lazy { ActivityDetalhesProdutosBinding.inflate(layoutInflater) }
+    private val produtoDao by lazy { AppDatabase.getInstance(this).produtoDao() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         tentaCarregarProduto()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        produtoId?.let { id ->
+            produto = produtoDao.getId(id)
+
+        }
+        produto?.let {
+            preencheCampos(it)
+        } ?: finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -32,29 +45,27 @@ class DetalhesProdutoActivity : AppCompatActivity(){
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(::produto.isInitialized){
-            val db = AppDatabase.getInstance(this)
-            val produtoDao = db.produtoDao()
-            when(item.itemId){
-                R.id.menu_detalhe_remover -> {
-                    produtoDao.delete(produto)
-                    finish()
-                }
-                R.id.menu_detalhes_editar -> {
-                    Intent(this, FormularioProdutoActivity::class.java).apply {
-                        putExtra(CHAVE_PRODUTO, produto)
-                        startActivity(this)
-                    }
+
+        when (item.itemId) {
+            R.id.menu_detalhe_remover -> {
+                produto?.let { produtoDao.delete(it) }
+                finish()
+            }
+            R.id.menu_detalhes_editar -> {
+                Intent(this, FormularioProdutoActivity::class.java).apply {
+                    putExtra(CHAVE_PRODUTO, produto)
+                    startActivity(this)
                 }
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
     private fun tentaCarregarProduto() {
-        intent.getParcelableExtra<Produto>(CHAVE_PRODUTO)?.let { produtoCarregado ->
-            produto = produtoCarregado
-            preencheCampos(produtoCarregado)
+        intent.getLongExtra())?.let { produtoCarregado ->
+
+            produtoId = produtoCarregado.id
         } ?: finish()
     }
 
