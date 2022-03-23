@@ -1,18 +1,14 @@
 package com.example.apporgs.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.example.apporgs.database.AppDatabase
-import com.example.apporgs.database.dao.ProdutoDao
-
 import com.example.apporgs.databinding.ActivityListaProdutosActivityBinding
-
 import com.example.apporgs.ui.recyclerView.ListaProdutosAdapter
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
+import kotlinx.coroutines.flow.collect
 
 class ListaProdutosActivity : AppCompatActivity() {
 
@@ -31,13 +27,16 @@ class ListaProdutosActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-        lifecycleScope.launch {
-            dao.buscaTodos().collect { produtos ->
-                adapter.atualiza(produtos)
-            }
-        }
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            val produtos = dao.buscaTodos()
+            adapter.atualiza(produtos)
+        }
+    }
     private fun configuraFab() {
         val fab = binding.activityListaProdutosFab
         fab.setOnClickListener {

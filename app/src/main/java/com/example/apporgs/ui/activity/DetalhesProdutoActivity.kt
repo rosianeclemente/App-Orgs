@@ -32,14 +32,14 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     private fun buscaProduto() {
+
         lifecycleScope.launch {
-            produtoDao.buscaPorId(produtoId).collect { produtoEncontrado ->
-                produto = produtoEncontrado
-                produto?.let {
-                    preencheCampos(it)
-                } ?: finish()
-            }
+            produto = produtoDao.buscaPorId(produtoId)
+            produto?.let {
+                preencheCampos(it)
+            } ?: finish()
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
