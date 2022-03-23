@@ -6,12 +6,15 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.apporgs.R
 import com.example.apporgs.database.AppDatabase
 import com.example.apporgs.databinding.ActivityDetalhesProdutosBinding
 import com.example.apporgs.extensions.formataParaMoedaBrasileira
 import com.example.apporgs.extensions.tentaCarregarImagem
 import com.example.apporgs.model.Produto
+import kotlinx.coroutines.launch
+
 
 
 class DetalhesProdutoActivity : AppCompatActivity() {
@@ -25,15 +28,18 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         tentaCarregarProduto()
-
+        buscaProduto()
     }
 
-    override fun onResume() {
-        super.onResume()
-        produto = produtoDao.getId(produtoId)
-        produto?.let {
-            preencheCampos(it)
-        } ?: finish()
+    private fun buscaProduto() {
+        lifecycleScope.launch {
+            produtoDao.buscaPorId(produtoId).collect { produtoEncontrado ->
+                produto = produtoEncontrado
+                produto?.let {
+                    preencheCampos(it)
+                } ?: finish()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -42,11 +48,12 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
             R.id.menu_detalhe_remover -> {
-                produto?.let { produtoDao.delete(it) }
-                finish()
+                lifecycleScope.launch {
+                    produto?.let { produtoDao.remove(it) }
+                    finish()
+                }
             }
             R.id.menu_detalhes_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {
@@ -55,7 +62,6 @@ class DetalhesProdutoActivity : AppCompatActivity() {
                 }
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -72,4 +78,5 @@ class DetalhesProdutoActivity : AppCompatActivity() {
                 produtoCarregado.valor.formataParaMoedaBrasileira()
         }
     }
+
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.apporgs.R
+import com.example.apporgs.extensions.formataParaMoedaBrasileira
 import com.example.apporgs.extensions.tentaCarregarImagem
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -26,43 +27,38 @@ class ListaProdutosAdapter(
     inner class ViewHolder(private val binding: ProdutoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private lateinit var  produto: Produto
+        private lateinit var produto: Produto
 
         init {
             itemView.setOnClickListener {
-                if(::produto.isInitialized){
+                if (::produto.isInitialized) {
                     quandoClicaNoItem(produto)
                 }
             }
         }
+
         fun vincula(produto: Produto) {
+            this.produto = produto
             val nome = binding.produtoItemNome
             nome.text = produto.nome
             val descricao = binding.produtoItemDescricao
             descricao.text = produto.descricao
             val valor = binding.produtoItemValor
-            val valorEmMoeda: String = formataMoeda(produto.valor)
+            val valorEmMoeda: String = produto.valor
+                .formataParaMoedaBrasileira()
             valor.text = valorEmMoeda
 
+            val visibilidade = if (produto.imagem != null) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
 
-//           val visibilidade = if(produto.imagem != null){
-//                View.VISIBLE
-//            }else{
-//                View.GONE
-//            }
-//            binding.imageView.visibility = visibilidade
+            binding.imageView.visibility = visibilidade
 
-            //outra forma de implementação
             binding.imageView.tentaCarregarImagem(produto.imagem)
-
-
         }
 
-        private fun formataMoeda(valor: BigDecimal): String {
-            val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
-            val valorEmMoeda = formatador.format(valor)
-            return valorEmMoeda
-        }
 
     }
 
