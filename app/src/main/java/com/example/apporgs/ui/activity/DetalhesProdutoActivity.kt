@@ -14,6 +14,7 @@ import com.example.apporgs.extensions.formataParaMoedaBrasileira
 import com.example.apporgs.extensions.tentaCarregarImagem
 import com.example.apporgs.model.Produto
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 
 
 
@@ -31,15 +32,20 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         buscaProduto()
     }
 
+    override fun onResume() {
+        super.onResume()
+        buscaProduto()
+    }
+
     private fun buscaProduto() {
-
         lifecycleScope.launch {
-            produto = produtoDao.buscaPorId(produtoId)
-            produto?.let {
-                preencheCampos(it)
-            } ?: finish()
+            produtoDao.buscaPorId(produtoId).collect { produtoEncontrado ->
+                produto = produtoEncontrado
+                produto?.let {
+                    preencheCampos(it)
+                } ?: finish()
+            }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,10 +56,13 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_detalhe_remover -> {
-                lifecycleScope.launch {
-                    produto?.let { produtoDao.remove(it) }
-                    finish()
+                produto?.let {
+                    lifecycleScope.launch {
+                        produtoDao.remove(it)
+                        finish()
+                    }
                 }
+
             }
             R.id.menu_detalhes_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {

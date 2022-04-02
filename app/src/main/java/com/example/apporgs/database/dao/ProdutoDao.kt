@@ -2,16 +2,15 @@ package com.example.apporgs.database.dao
 
 import androidx.room.*
 import com.example.apporgs.model.Produto
-import java.util.concurrent.Flow
-
-
-
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProdutoDao {
-
     @Query("SELECT * FROM Produto")
-    suspend fun buscaTodos() : List<Produto>
+    fun buscaTodos(): Flow<List<Produto>>
+
+//    @Query("SELECT * FROM Produto WHERE usuarioId = :usuarioId")
+//    fun buscaTodosDoUsuario(usuarioId: String) : Flow<List<Produto>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun salva(vararg produto: Produto)
@@ -20,6 +19,6 @@ interface ProdutoDao {
     suspend fun remove(produto: Produto)
 
     @Query("SELECT * FROM Produto WHERE id = :id")
-    suspend fun buscaPorId(id: Long) : Produto?
+    fun buscaPorId(id: Long): Flow<Produto?>
 
 }
